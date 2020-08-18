@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Some title</title>
+    <!-- Standard boostrap css file link-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+<body>
+    <!-- Standard bootstrap container with some rows and div's with id. Nothing too crazy-->
+    <div class="container">
+        <div class="row">
+            <div id="thing"><h1>Team Information</h1></div>
+        </div>
+        ​
+    </div>
+    <!-- End of the HTML. Everything else will be added to the page via javascript -->
+	
+    <!-- Link to the jQuery library. Required by bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	
+    <!-- The code that populates the page -->
+    <script type="text/javascript">
+        /* This tell the browser to wait until the documemt ready before running the code. For a document to be ready all of the HTML, CSS and JS has to be loaded. */
+		$(document).ready(function() {
+    		/* Simple Alert popup with a message. Code stops until you press ok button on the window */
+            alert("I am an alert window.");
+    		
+            /* This writes a messsage to the log. Useful for debugging code. */
+            console.log( "Page is ready! All HTML, CSS and JS is loaded" );
+
+​
+            /* Arrays start at 0. The code writes the value that is in key/position 1 of the array. 
+            console.log(stuff[1]);*/
+            
+            /* If we want to write out each element in the array we have to inspect each element of the array. To do that we use a for loop. Detailed explaination on slack. 
+    		for (var key = 0; key < stuff.length; key = key + 1 ) { */
+                /* We can combine text and variables on the console log. 
+    			console.log("Position " + key + " has a value " + stuff[key] );
+    		}
+            
+            console.log("-----------------");*/
+​
+            /* For loops are a bit long to write so jQuery has an each function with is similar to the for loop. It also has keys and values. The code below is the same as the for loop above.*/
+    		$.each(stuff, function(key, value){
+    			console.log("Position: "+ key + " has a value " + value);
+    		});
+​
+            console.log("-----------------");
+​
+            /* $() is the jQuery selector. It basically means, go find the element(s) in the page  that match what is in the brackets. This is where the difference between ID's and classes in css become important. The selector uses the same format as CSS so #thing refers to the element in the page that has the id thing. If we had said .thing it would find all the elements with the class thing
+​
+            Once we find the element with id thing we appened the following text to it.  
+            $("#thing").append("<h1>hello world</h1>");*/
+​
+            /* We are creating a listener to listen for when someone clicks the element with the id thing2. Only when they click is the code will be executed. On takes a number of different options: click, mouseenter, mouseleave....... 
+            $("#thing2").on("click",function(){ */
+                /* Here we combine the for/each loop with append to write multiple values to the page 
+                $.each(stuff, function(key, value){
+                    $("#thing").append("Position: "+ key + " has a value " + value);
+                });
+                
+            });*/
+​
+            /* now we use the each function append many item but we add formating to the to the item we are appending. paragraph tags, div, classes 
+            $.each(stuff, function(key,value){
+                $("#thing3").append('<div class="col-md-3">'+
+                                    '<p> The value is '+ 
+                                            value + 
+                                    '</p></div>');
+            });
+            console.log("-----------------");*/
+​
+            /*
+            =========== JSON ===========
+            Until now we have been dealing with arrays and they are a bit basic. Using 0,1,2.... for keys is fine when the data is simple but what happens when data gets a bit more complicated? 
+​
+            */
+​
+            /* Here we are making a request to an API for information. */
+            $.ajax({
+                url: 'https://randomuser.me/api/', /* The is the URL that we are sending the request to. You can put this url in your browser and the JSON Formatter plugin with make is easier to read the response that comes back*/
+                dataType: 'json', /* This is they type of data we expect to get back from the server. */
+                success: function(data) { /* If the request is sucessful we will get some data back from the server. We will want to manipulate that data by running the code inside the { }*/
+                    console.log(data); /* log the variable data */
+                }
+            });
+            console.log("-----------------");
+​
+            /* The above code gave us one user we update the url to get 20 users. */
+            $.ajax({
+                url: 'https://randomuser.me/api/?results=20',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data) /* The respose gives us to top level pieces of information. An array of results and info */
+​
+                    /* From the data that comes back we are only interested in the array of results. Using our for/each code we examine each element in the results array*/
+                    $.each(data.results, function(key,value){
+                        /* the value in the results array is about an indivudal person so lets make our code a bit easier to read and assign value to a variable called person. */
+                        var person = value
+                        console.log(person.name.first);
+                        $("#thing4").append('<div class="col-md-3">'+
+                                    '<p> My name is '+ 
+                                            person.name.first + /* the could also have said value.name.first */
+                                    '</p></div>')
+                    });
+                }
+            });    
+		});
+	</script>
+</body>
+</html>
